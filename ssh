@@ -22,7 +22,6 @@ ENABLING REMOTE ACCESS ON ROUTER (AFTER "The Bills")
 ip domain-name {domain}
 crypto key generate rsa {1024}
 username {user} priv {0-15} secret {user password}
-aaa new-model
 line vty 0 4
 transport input ssh
 
