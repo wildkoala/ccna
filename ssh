@@ -1,0 +1,36 @@
+Here's what you have to do to get ssh on a cisco router or switch
+
+FIRST, "The Bills"
+Time - clock set {hh:mm:ss dd MON YR}
+H - hostname {hostname}
+E - enable secret {password}
+
+B - Banner motd # {pass phrase} #
+I - (no) ip domain-lookup
+  - int {g0/0, g0/1}
+  - ip address {ip} {mask}
+  - no shut
+L - line console 0
+  - password {password for logging into console}
+  - login
+L - line vty 0 15
+  - password {password for logging in remotely}
+  - login
+S - Service password-encryption
+
+ENABLING REMOTE ACCESS ON ROUTER (AFTER "The Bills")
+ip domain-name {domain}
+crypto key generate rsa {1024}
+username {user} priv {0-15} secret {user password}
+aaa new-model
+line vty 0 4
+transport input ssh
+
+
+
+ENABLING REMOTE ACCESS ON SWITCH (AFTER "The Bills")
+ip default-gateway {ip address}
+line vty 0 15
+password {your password}
+login
+exit
