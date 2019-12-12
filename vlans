@@ -1,0 +1,33 @@
+Configuring vlans (CISCO)
+
+
+SWITCH
+
+(Configuring a port to be in a vlan)
+
+Switch1>enable
+Switch1#configure terminal
+Switch1(config)#interface vlan 2
+Switch1(config-if)#description {WORDS}
+Switch1(config-if)#exit
+Switch1(config)#interface range FastEthernet 0/1 , FastEthernet 0/12
+Switch1(config-if-range)#switchport mode access
+Switch1(config-if-range)#switchport access vlan 2
+
+(Configuring a trunk port)
+
+Switch1>enable
+Switch1#configure terminal
+Switch1(config)#interface FastEthernet 0/24
+Switch1(config-if-range)#switchport mode trunk
+
+ROUTER
+
+You don't need an IP address on the interface itself if you're simply doing a router on a stick (there's one wire coming out of the router, and it's into a switch). 
+
+Router(config)# interface g0/0
+Router(config-if)# no shutdown
+Router(config-if)# exit
+Router(config)# interface g0/0.(#)
+Router(config-subif)# encapsulation dot1Q (same # as before)
+Router(config-subif)# ip address {address} {mask}
