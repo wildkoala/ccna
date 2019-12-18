@@ -1,0 +1,10 @@
+Here are the commands for enabling dynamic routing with RIP
+
+router rip
+  version 2
+  redistribute static         # do this if you want to share a static route with another router
+  passive-interface <interface> # do this if there's only hosts on the end of the interface, you only need to send out RIP messages to other routers
+    #you can also have multiple passive-interfaces
+  network <net_addr>          # include all networks that router is connected to. 
+    # you can do this for every network that you have
+  no auto-summary             # this means "dont de-subnet these and consolidate them into one network.
