@@ -15,5 +15,17 @@ ip access-list standard <name/number>
 deny <ip> <wildcard>
 permit any
 
-interface g0/1
+interface <interface>
 ip access-group <name/number> <in/out>
+
+
+
+
+
+
+
+
+
+
+
+
