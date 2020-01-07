@@ -1,0 +1,88 @@
+// DHCP (for IPv4)
+
+1. Client connects to network
+2. Client sends out DHCP Discover Message (broadcasted)
+3. Server hears the broadcast, selects an IP and sends back a DHCP OFFER
+4. Client gets the offer and response with a DHCP REQUEST
+5. Server confirms that client has a good address, called a DHCP Acknowledge.
+
+*6. Later the client can ask to extend their lease
+*7. Server confirms you want to keep your lease
+
+
+RELEVANT COMMANDS:
+ip dhcp excluded-address <address>
+ip dhcp pool <pool-name>
+    network <network>
+    default-router <address>
+    dns-server <address>
+    domain-name <name>
+    lease <duration>
+no service dhcp
+service dhcp
+show ip dhcp binding
+
+Configuring a router as a DHCP client:
+ip address dhcp (while in the interfaces configuration mode)
+ip helper-address (if the dhcp server is in a different broadcast domain)
+
+
+=================================================================================
+
+DHCP for IPv6
+
+SLAAC - Stateless Address Autoconfiguration
+
+1. Client physically connects to the network
+2. Client sends a broadcast Router Soliciation message (RS) asking for information
+3. Router gets the broadcast and responds with a Router Advertisement (RA). They send these messages every 200s by default after requests.
+
+The RA includes everything that the user needs to create their own good ip address, and then sends it to the router at the very end just to
+verify that the address has not been taken by anyone else.
+
+ipv6 unicast-routing
+
+Okay, now that the router is configured to use IPv6, we can do the rest of the config.
+
+You have 3 options for dynamically assigning IPs with IPv6.
+  - SLAAC -> instructs the client to just use the information that the router gives them in RA's
+  COMMMANDS:
+      no ipv6 nd managed-config-flag
+      no ipv6 nd other-config-flag
+      
+  - RA's + DHCPv6 -> The router will give you what you need for an address, but there's a DHCP server with extra info.
+  COMMMANDS:
+      no ipv6 nd other-config-flag
+      
+  - Just DHCPv6 (Stateful DHCPv6) -> RA just tells the client nothing, and to simply contact the DHCPv6 server.
+  COMMMANDS:
+      no ipv6 nd managed-config-flag
+ 
+ 
+ Stateless DHCPv6 is when the client generates its own IP but asks for everything else from the DHCP server
+ Stateful DHCPv6 means that the clients sends a message to the server asking for an IP, which it gets back with other information.
+
+RELEVANT COMMANDS:
+
+ipv6 unicast-routing
+ipv6 dhcp pool
+ipv6 dhcp server
+ipv6 nd other-config-flag (Do this when on an interface)
+ipv6 enable (allows neighbor discover)
+ipv6 address autoconfig (get an IPv6 address over SLAAC)
+show ipv6 interface
+ipv6 dhcp relay destination
+
+
+
+
+
+
+
+
+
+
+
+
+
+
