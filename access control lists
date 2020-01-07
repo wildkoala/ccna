@@ -1,0 +1,19 @@
+// Standard ACLs
+    - They only filter based on source IP.
+    - only use numbers 1-100
+    - They have implicit "deny any" at the end.
+    - They should be applied as close to the destination as possible to avoid stopping legitimate traffic.
+    - There's an "access-list" command in priviledged exec mode, but it doesn't allow you to give multiple lines.
+    - After creating the list, you must assign it to an interface with a particular direction.
+    - in EXEC mode, you can use the "show access-lists" to view the ACLs and if they've been violated.
+    - Use "clear access-list counters" to reset the number of acl violations to 0.
+    
+    
+// Commands to create a standard ACL
+
+ip access-list standard <name/number>
+deny <ip> <wildcard>
+permit any
+
+interface g0/1
+ip access-group <name/number> <in/out>
