@@ -1,3 +1,16 @@
+// EXAMPLE COMMANDS UPFRONT
+
+ip dhcp excluded-address <first ip in range> <last ip in range>
+
+ip dhcp pool <name>
+ network <net address> <subnet mask>
+ default-router <ip address>
+ dns-server <ip address>
+ domain-name <something.something>
+ 
+These commands alone will be enough to get DHCPv4 working. Just assign an interface or subinterface on the router
+an ip that is within the network you want to send ip addresses to.
+
 // DHCP (for IPv4)
 
 1. Client connects to network
