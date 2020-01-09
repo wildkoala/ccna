@@ -1,4 +1,6 @@
-Commands for NAT'ing in Cisco
+Commands for STATIC NAT'ing in Cisco
+
+DYNAMIC COMMANDS AT THE BOTTOM
 
 MAP OF NETWORK 
  --- "inside local" *your router* "outside local"--- INTERNET --- "outside global" *other router* "outside local"--- 
@@ -48,11 +50,29 @@ For all of these, you must specify first which interface is "inside" and which i
  
  
  
+ DYNAMIC ADDRESS TRANSLATION
  
+ =================================================================
+ Mandatory Beginning Commands
+ =================================================================
+ int <interface> // this has to be the outside local interface. See diagram above.
+ ip nat outside
+ int <interface> // this has to be the inside local interface. See diagram above.
+ ip nat inside
  
+ =================================================================
+ Rest of commands
+ =================================================================
+ access-list <#> permit <network address> <WILDCARD mask>
+ ip nat pool <name> <starting IP> <ending IP> netmask <netmask>
+ ip nat source list <#> pool <pool name> overload
  
+ // the pool represents your pool of external IPs, you might just have 1.
+ // the overload command means that multiple people can use the same IP, they'll just use different ports.
  
+ // you can view the NAT tables with:
  
+ show ip nat translations
  
  
  
