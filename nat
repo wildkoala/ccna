@@ -1,0 +1,64 @@
+Commands for NAT'ing in Cisco
+
+MAP OF NETWORK 
+ --- "inside local" *your router* "outside local"--- INTERNET --- "outside global" *other router* "outside local"--- 
+ 
+// NOTE
+For all of these, you must specify first which interface is "inside" and which interface is "outside"
+
+ =================================================================
+ Mandatory Beginning Commands
+ =================================================================
+ int <interface> // this has to be the outside local interface. See diagram above.
+ ip nat outside
+ int <interface> // this has to be the inside local interface. See diagram above.
+ ip nat inside
+
+ Once you've run that, you can do whatever kind of NAT technique you'd like below.
+ 
+ 
+ 
+ =================================================================
+ 1 to 1, static NAT
+ =================================================================
+
+ ip nat inside source static <internal ip address> <external ip address>
+ 
+ 
+ 
+ =================================================================
+ Port Forwarding/Port Address Translation 1 to 1
+ =================================================================
+
+ ip nat inside source static <protocol> <internal ip address> <internal port> <external ip address> <external port>
+
+
+
+ =================================================================
+ NAT Overload Translation 
+ =================================================================
+ // This is the NAT you usually think about with home routers. You have 1 public IP and all your internal users share it.
+ 
+ access-list <#> permit <network address> <WILDCARD mask>
+ ip nat inside source list <#> interface <interface> overload
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
