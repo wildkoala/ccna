@@ -7,4 +7,4 @@ BANNER - for legal reasons, put a banner of the router.
 IP DOMAIN-LOOKUP - turn this off, bad, slow and insecure.
 LINE CONSOLE - put a password on the console. don't forget the login command
 LINE VTY - use 0 and 15, which will cover all the possible vty lines. 
-SERVICE ENCRYPTION - secure the running config so it doesnt show things in plain text.
+SERVICE PASSWORD-ENCRYPTION - secure the running config so it doesnt show things in plain text.
