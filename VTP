@@ -1,0 +1,54 @@
+// This is used for sharing VLAN data between switches to make your network more scalable.
+
+// We set up one of the switches as the server and configure the rest to get their information from the server.
+
+// There are also "transparent" switches, which will forward out the VTP messages along their other trunk ports,
+// but it wont effect the configuration of that switch
+
+// the configuration revision number on the switch determines if it'll take an update or not. It gets incremented every time
+// it's updated. So a switch will update its vlans if the incoming vtp message has a configuration revision number that's higher.
+// This can be an issue if you buy a used switch, which already has a config set on it. The easiest way to reset the counter is
+// changing the vty domain to something random, and then changing it to the actually domain you want to put it on.
+
+// 5 STEPS OF CONFIGURATION
+
+1. Configure the VTP server
+2. Configure the VTP domain and password
+3. Configure the VTP clients
+4. Configure vlans on VTP server
+5. Verify that the clients have the updated vlan info
+
+=======================================================================
+Configure a switch to be the VTP server
+=======================================================================
+
+// in global config
+vtp mode server
+vtp domain <domain>
+vtp password <password>
+
+
+=======================================================================
+Configure a switch to be a VTP client
+=======================================================================
+
+// in global config
+vtp mode client
+vtp domain <domain>
+
+
+=======================================================================
+Configure vlans VTP server
+=======================================================================
+
+// in global config
+vlan <#>
+name <name>
+
+=======================================================================
+Viewing the results
+=======================================================================
+
+show vty status
+
+
