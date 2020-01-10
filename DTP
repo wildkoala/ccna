@@ -1,0 +1,23 @@
+// DTP - Dynamic Trunking Protocol
+
+// This protocol is used between switches to establish what ports are going to be trunked.
+// You'll wanna turn it off on interfaces on a cisco switch that are connected to devices that do not support DTP
+// To enable trunking from a cisco switch to a device that does not support DTP, 
+// use the switchport mode trunk + switchport nonegotiate.
+
+There are 5 total different trunking modes:
+
+1. switchport mode access
+2. switchport mode dynamic auto
+3. switchport mode dynamic desirable
+4. switchport mode trunk
+5. switchport 
+
+To delete a vlan:
+no vlan <#>
+
+For routers on sub-interfaces, it's convention to make whatever number comes after the . to be the vlan number.
+However, the vlan that you're really in is the one that you gave when you type "encapsulation dot1Q vlan <#>".
+
+Is this protocol enabled by default?? IDK
+
