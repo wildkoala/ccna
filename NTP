@@ -1,0 +1,32 @@
+Concepts:
+
+// The "master" is the the one that sets the time, and everyone else references this machine for the time.
+
+// The authoritative device is said to be in "stratum 0"
+// Devices directly connected to an authoritative device are "stratum 1"
+// The next connected devices are "stratum 2"
+
+COMMANDS:
+
+=====================================================
+Establish device as the NTP master (server)
+=====================================================
+
+// in privledged exec mode
+clock set hh:mm:ss dd MON YEAR
+
+// in global config
+DEVICE(config)#ntp master
+
+
+=====================================================
+Establish device as the NTP client
+=====================================================
+
+// in global config
+DEVICE(config)#ntp server <ip address>
+
+
+
+
+
