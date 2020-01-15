@@ -7,8 +7,13 @@
 
 // the configuration revision number on the switch determines if it'll take an update or not. It gets incremented every time
 // it's updated. So a switch will update its vlans if the incoming vtp message has a configuration revision number that's higher.
-// This can be an issue if you buy a used switch, which already has a config set on it. The easiest way to reset the counter is
-// changing the vty domain to something random, and then changing it to the actually domain you want to put it on.
+// This can be an issue if you buy a used switch, which already has a config set on it. On an enterprise network, if the used switch
+// has a higher revision number and its configured as a NTP server, it will overwrite the rest of the switches configuration. (MUAHAHAHA)
+
+// Spare yourself the heartache and reset the configuration counter.
+// The easiest way to reset the counter is changing the vty domain to something random, and then changing it to the actually domain 
+// you want to put it on.
+// It would have been absolutely stellar if they'd just included something like "clear ntp revisions". 
 
 // 5 STEPS OF CONFIGURATION
 
@@ -50,5 +55,32 @@ Viewing the results
 =======================================================================
 
 show vty status
+
+
+// Extra notes
+
+VTP servers store their VLAN info in NVRAM so it can recover the data even after at power loss. Clients keep it in RAM.
+There are versions 1 and 2 for VTP. 
+Version 1 is default on all switches now. It supports all normal range VLANs.
+Version 2 Supports legacy Token Ring networks (old networks where basically only one host can talk at a time)
+Enter the "switchport mode access" command before you use "switchport access vlan <#>". It keeps your switch from negotiating with
+a device and being turned into a trunk port.
+
+// Hacker notes
+
+Configuring a switch with a really high configuration number and plugging it into the network will wipe out the existing configuration
+It's possible to negotiate with a switch to get a port to be a trunk if the network administrator did not explicitly use the "switchport mode access"
+Doing so will allow you to get onto every vlan, where you're able to run other attacks.
+
+
+
+
+
+
+
+
+
+
+
 
 
