@@ -1,9 +1,12 @@
 // DTP - Dynamic Trunking Protocol
 
+// Cisco owns this protocol
 // This protocol is used between switches to establish what ports are going to be trunked.
 // You'll wanna turn it off on interfaces on a cisco switch that are connected to devices that do not support DTP
+    // It won't do anything, and why share the info if you don't have to.
 // To enable trunking from a cisco switch to a device that does not support DTP, 
 // use the switchport mode trunk + switchport nonegotiate.
+// You have to set this stuff up on every interface which would be really obnoxious.
 
 There are 5 total different trunking modes:
 
@@ -19,5 +22,52 @@ no vlan <#>
 For routers on sub-interfaces, it's convention to make whatever number comes after the . to be the vlan number.
 However, the vlan that you're really in is the one that you gave when you type "encapsulation dot1Q vlan <#>".
 
-Is this protocol enabled by default?? IDK
+Is this protocol enabled by default?? IDK, maybe
+
+======================================================
+Enable trunking from a Cisco switch to a device that doesn't support DTP.
+======================================================
+// This will make this interface a trunk, but not send out DTP messages.
+
+// in global config
+switchport mode trunk
+switchport nonegotiate
+
+
+======================================================
+Results of switch negotiations with states
+======================================================
+
+                  |  Dynamic Auto |  Dynamic Desirable   |   Trunk   |   Access    |
+                    
+Dynamic Auto      |   Access      |          Trunk       |   Trunk   |   Access    |
+
+Dynamic Desirable |   Trunk       |          Trunk       |    Trunk  |   Access    |   
+
+Trunk             |   Trunk       |          Trunk       |    Trunk  |      LC     | 
+
+Access            |   Access      |          Access      |    LC     |   Access    | 
+
+
+To set the mode on your switch, go to the particular interface you want to change and:
+switchport mode <mode>
+
+
+======================================================
+Hacker Notes 
+======================================================
+
+- If you set your own switch to "switchport mode dynamic desirable" then, unless the administrator of the other switch
+  has explicitly typed in "switchport mode access", you will get a trunk that will enable you to listen to all the VLANs.
+
+- One could theoretically attach a user device to the switch, sniff the traffic for telnet, read out the login credentials to the 
+  other network devices and get control of the networking device. You could then update access lists to allow malicious traffic and
+  completely pwn a network.
+
+
+
+
+
+
+
 
