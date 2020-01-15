@@ -55,6 +55,11 @@ Viewing the results
 =======================================================================
 
 show vty status
+show vlan
+show interfaces
+show vlan name <name>
+show interfaces vlan <#>
+show vlan brief 
 
 
 // Extra notes
