@@ -68,7 +68,9 @@ a device and being turned into a trunk port.
 
 // Hacker notes
 
-Configuring a switch with a really high configuration number and plugging it into the network will wipe out the existing configuration
+Configuring a switch with a really high configuration number and plugging it into the network will wipe out the existing configuration on
+the other switches across the network.
+
 It's possible to negotiate with a switch to get a port to be a trunk if the network administrator did not explicitly use the "switchport mode access"
 Doing so will allow you to get onto every vlan, where you're able to run other attacks.
 
