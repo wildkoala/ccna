@@ -1,0 +1,50 @@
+// If you've got a bunch of switches connected to one another redundantly, when a broadcast message like an ARP message is sent out
+// the switches will keep broadcasting the message back and forth and flood their connections to each other with broadcast messages.
+// There's no TTL field at layer 2 like there is with IP, so there's no way to get rid of them unless you cycle power on the switch
+// or disconnect the switches from each other.
+
+// This is a real pain in the back-side- enter STP.
+
+// STP determines a "root bridge" and then finds the fastest path from a connected switch to the root bridge. Then it blocks all the 
+// other paths so that broadcast traffic doesn't get looped. 
+
+// How to determine who's root
+
+// How to determine which route is fastest
+
+
+===============================================
+Establish a switch as the root bridge
+===============================================
+// In global config
+set spantree root <vlan #>
+
+
+===============================================
+Configuring PortFast
+===============================================
+// You only do this on interfaces that face hosts, not other networking devices
+set spantree portfast <interface range> enable
+
+
+===============================================
+Check spantree info
+===============================================
+show spantree <vlan #>
+show spantree summary
+show spantree statistics
+show spantree backbonefast
+show spantree blockedports
+show spantree portstate
+show spantree portvlancost
+show spantree uplinkfast
+
+
+
+
+
+
+
+
+
+
