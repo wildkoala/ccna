@@ -1,0 +1,21 @@
+Use this to increase the bandwidth of switch to switch communications by aggregating stuff sent over multiple ports into a single, logical
+connection between switches.
+
+
+============================================================
+Configuring an EtherChannel
+============================================================
+
+// in global config
+int range <int start - int finish> 
+channel-group # mode active
+int port-channel #
+switchport mode trunk
+switcport trunk allowed vlan 1,2,20
+
+
+
+
+
+
+
