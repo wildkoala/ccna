@@ -1,0 +1,10 @@
+Configure redundant next hop gateway
+
+interface g0/1
+ip address <ip> <mask>
+standby version 2
+standby <#> ip <ip>
+standby <#> priority <priority #>
+no shut
+
+(do again on the other interfaces)
