@@ -14,8 +14,37 @@ switchport mode trunk
 switcport trunk allowed vlan 1,2,20
 
 
+There's a couple different protocols that work when creating a EtherChannel.
+- LACP 
+- PAgP
 
 
+LACP:
+      |    S1    |       S2        |     Channel Establishment
+      |    ON    |       ON        |              YES
+      |   Ac/Pa  |      Active     |              YES
+      | ON/AC/PA |      Not Conf   |              NO
+      |   ON     |      Active     |              NO
+      |   PA/ON  |      Passive    |              NO
 
 
+AC = Active
+PA = Passive
+Conf = Configured
 
+PAgP:
+
+      |    S1    |       S2        |     Channel Establishment
+      |    ON    |       ON        |              YES
+      |   Au/De  |       De        |              YES
+      | ON/Au/De |      Not Conf   |              NO
+      |   ON     |       De        |              NO
+      |   Au/ON  |      Auto       |              NO
+      
+      
+Au = Auto
+De = Desirable
+      
+      
+      
+      
