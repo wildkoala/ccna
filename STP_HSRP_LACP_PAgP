@@ -21,6 +21,14 @@ standby <grp-num> priority <0-255>
 //as soon as you put the "standby <grp-num> ip <virtual-ip>" on the other router, you'll have redundancy configured.
 
 
+
+LINK AGGERGATION FOR SWITCHES:
+
+NO PROTOCOL/MANUAL CONFIG:
+
+int range f0/<#-#>
+channel-group <3> mode on
+
 LACP:
 
 switch# configure terminal
@@ -42,7 +50,8 @@ show ethernet channel summary
 
 
 
-
+Cisco stuff tends to break when you have multiple etherchannels. You might have configured it right, you just
+need to shut the physical range of interfaces off and turn them back on again.
 
  
 
