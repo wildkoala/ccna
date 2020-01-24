@@ -1,0 +1,54 @@
+// You can use "no switchport" on a multi-layer switchport in order for it to behave like a regular layer 3 port.
+
+
+
+Spanning Tree:
+
+spanning-tree mode rapid-pvst
+spanning-tree vlan <#>
+spanning-tree vlan <#> root primary
+spanning-tree vlan <#> root secondary
+spanning-tree portfast bpduguard default 
+
+
+HSRP: // highest priority becomes the "active router". Can be manually set or negotiated. Default is 100.
+
+int <interface>
+standby version 2
+standby <grp-num> ip <virtual-ip>
+standby <grp-num> priority <0-255>
+
+//as soon as you put the "standby <grp-num> ip <virtual-ip>" on the other router, you'll have redundancy configured.
+
+
+LACP:
+
+switch# configure terminal
+switch(config)# interface f0/<#>
+switch(config-if)# channel-group <#> mode <on/passive/active>
+
+show ethernet channel summary
+
+
+PAgP:
+
+Switch#configure terminal
+Switch(configure)#interface range fa0/<#-#>
+Switch(configure-if-range)#channel-group <#> mode <desirable/active/auto/on/passive>
+Switch(configure-if-range)#end
+
+show ethernet channel summary
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
