@@ -1,0 +1,29 @@
+======================================================
+Basic Info
+======================================================
+
+- YOU MUST HAVE A HOSTNAME ON YOUR ROUTERS FOR THESE TO WORK
+
+
+======================================================
+Commands for ppp and pap
+======================================================
+
+// must create user is local database on each router
+username <username> password <password>
+
+interface <int>
+ ip address <addr> <subnet>
+ encapsulation ppp
+ ppp authentication pap
+ //  Lastly, the name and password you want to authenticate to other routers with.
+ ppp pap sent-username <name> password <password>
+ 
+ 
+ ======================================================
+Commmands for chap
+======================================================
+interface <int>
+ ip address <addr> <subnet>
+ encapsulation ppp
+ ppp authentication chap
