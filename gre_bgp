@@ -1,0 +1,34 @@
+
+
+// Configure a GRE tunnel on both sides
+
+interface tunnel<#>
+ ip address <network> <subnet>
+ mtu <#>
+ tunnel source <interface>
+ tunnel destination <ip>
+ tunnel mode gre ip
+
+
+// Configure BGP
+
+router bgp <AS #>
+neighbor <ip addr> remote-as <their AS #>
+network <net addr> <subnet>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
