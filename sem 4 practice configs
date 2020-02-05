@@ -1,0 +1,427 @@
+R1
+
+Current configuration : 2272 bytes
+!
+! Last configuration change at 10:57:44 UTC Wed Feb 5 2020
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$mERr$EJnmB234UvJf9yoQMWYJK/
+!
+no aaa new-model
+memory-size iomem 15
+!
+!
+!
+no ip domain lookup
+ip domain name CISCO-LAB.com
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+license udi pid CISCO2901/K9 sn FJC2028A2UA
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package datak9
+!
+!
+username admin password 7 08325F4619181604
+username R1 password 7 14141B180F0B3A3B34
+username R2 password 7 104D000A0618021B1C
+username R3 password 7 094F471A1A0A07021B
+!
+redundancy
+!
+!
+interface Tunnel0
+ ip address 192.168.13.1 255.255.255.252
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ description connection to S1
+ ip address 172.16.1.1 255.255.255.0
+ duplex auto
+ speed auto
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:ACAD:CAFE:1::1/64
+ ipv6 enable
+ ipv6 eigrp 99
+!
+interface Serial0/0/0
+ description connection to R2
+ ip address 198.198.12.1 255.255.255.252
+ encapsulation ppp
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:ACAD:CAFE:12::1/64
+ ipv6 enable
+ ipv6 eigrp 99
+ ppp authentication chap callin
+ clock rate 2000000
+!
+interface Serial0/0/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip flow-export version 9
+!
+ip route 0.0.0.0 0.0.0.0 Serial0/0/0 205
+!
+ipv6 router eigrp 99
+ eigrp router-id 1.1.1.1
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+ vstack
+banner motd ^CCunauthorized access is prohibited^C
+!
+line con 0
+ password 7 0822455D0A1606181C1B0D1739
+ login
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end
+
+
+
+
+
+R2
+
+Current configuration : 2238 bytes
+!
+! Last configuration change at 07:51:32 UTC Tue Aug 28 2001
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$mERr$EJnmB234UvJf9yoQMWYJK/
+!
+no aaa new-model
+memory-size iomem 15
+!
+!
+!
+no ip domain lookup
+ip domain name CISCO-LAB.com
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+license udi pid CISCO2901/K9 sn FJC2028A2TH
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package datak9
+!
+!
+username admin password 7 08325F4619181604
+username r2 password 7 121A0C0411041C143A
+username R1 password 7 070C285F4D06091507
+username R3 password 7 060506324F41190915
+!
+redundancy
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial0/0/0
+ description connection to R1
+ ip address 198.198.12.2 255.255.255.252
+ encapsulation ppp
+ ipv6 address FE80::2 link-local
+ ipv6 address 2001:ACAD:CAFE:12::2/64
+ ipv6 enable
+ ipv6 eigrp 99
+ ppp authentication chap
+!
+interface Serial0/0/1
+ description connection to R3
+ ip address 198.198.23.1 255.255.255.252
+ encapsulation ppp
+ ipv6 address FE80::2 link-local
+ ipv6 address 2001:ACAD:CAFE:23::1/64
+ ipv6 enable
+ ipv6 eigrp 99
+ ppp authentication pap
+ ppp pap sent-username R2 password 7 0822455D0A16150702
+ clock rate 2000000
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+ip flow-export version 9
+!
+!
+ipv6 router eigrp 99
+ eigrp router-id 2.2.2.2
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+ vstack
+banner motd ^CCunauthorized access is prohibited^C
+!
+line con 0
+ password 7 0822455D0A1606181C1B0D1739
+ login
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end
+
+
+
+
+
+
+R3
+
+
+Current configuration : 2811 bytes
+!
+! Last configuration change at 10:20:08 UTC Wed Feb 5 2020
+!
+version 15.7
+no service timestamps debug uptime
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R3
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$EJnmB234UvJf9yoQMWYJK/
+!
+no aaa new-model
+memory-size iomem 15
+!
+no ip domain lookup
+ip domain name CISCO-LAB.com
+no ip cef
+ipv6 unicast-routing
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+license udi pid CISCO2901/K9 sn FJC2028A2TW
+license boot module c2900 technology-package securityk9
+license boot module c2900 technology-package datak9
+!
+!
+username admin password 7 08325F4619181604
+username webadmin privilege 15 password 7 094F471A1A0A
+username r3 password 7 00071A1507541B161F
+username R2 password 7 070C285F4D06091507
+!
+redundancy
+!
+!
+interface Loopback1
+ description My loopback
+ ip address 200.150.100.1 255.255.255.255
+ ipv6 address 2001:ACAD:CAFE:3333::1/64
+ ipv6 enable
+ ipv6 eigrp 99
+!
+interface Tunnel0
+ ip address 192.168.13.2 255.255.255.252
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ ip address 172.16.3.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:ACAD:CAFE:3::1/64
+ ipv6 enable
+ ipv6 eigrp 99
+ ospfv3 shutdown
+!
+interface Serial0/0/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/0/1
+ description connection to R2
+ ip address 198.198.23.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ encapsulation ppp
+ ipv6 address FE80::3 link-local
+ ipv6 address 2001:ACAD:CAFE:23::2/64
+ ipv6 enable
+ ipv6 eigrp 99
+ ppp authentication pap
+ ppp pap sent-username R3 password 7 01100F175804161F31
+!
+interface Serial0/1/0
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+interface Serial0/1/1
+ no ip address
+ shutdown
+ clock rate 2000000
+!
+router eigrp 99
+!
+ip forward-protocol nd
+!
+ip http server
+ip http authentication local
+no ip http secure-server
+ip flow-export version 9
+!
+ip nat source list 1 interface Serial0/0/1 overload
+ip route 0.0.0.0 0.0.0.0 Serial0/0/1
+!
+ipv6 router eigrp 99
+ eigrp router-id 3.3.3.3
+!
+ipv6 ioam timestamp
+!
+access-list 1 permit 0.0.0.0 255.255.255.0
+!
+control-plane
+!
+vstack
+banner motd ^CCunauthorized access is prohibited^C
+!
+line con 0
+ password 7 0822455D0A1606181C1B0D1739
+ login
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+!
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
