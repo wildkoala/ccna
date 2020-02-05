@@ -1,8 +1,16 @@
+SW
+
+Configuring SPAN on a switch
+monitor session <#> source interface <int> //where you want to listen for traffic
+monitor session <#> destination interface <int> //where you want it sent after. The #'s should be the same.
+
+
+
 R1
 
-Current configuration : 2500 bytes
+Current configuration : 2873 bytes
 !
-! Last configuration change at 11:43:12 UTC Wed Feb 5 2020
+! Last configuration change at 15:44:40 UTC Wed Feb 5 2020
 !
 version 15.7
 service timestamps debug datetime msec
@@ -22,7 +30,8 @@ memory-size iomem 15
 !
 !
 !
-!
+ --More--
+*Feb  5 15:44:40.726: %SYS-5-CONFIG_I: Configured from console !        e
 !
 !
 !
@@ -62,6 +71,7 @@ username admin password 7 08325F4619181604
 username R1 password 7 14141B180F0B3A3B34
 username R2 password 7 104D000A0618021B1C
 username R3 password 7 094F471A1A0A07021B
+username R1PPP password 7 070C285F4D06091507
 !
 redundancy
 !
@@ -90,9 +100,10 @@ interface Embedded-Service-Engine0/0
 !
 interface GigabitEthernet0/0
  no ip address
- shutdown
  duplex auto
  speed auto
+ pppoe enable
+ pppoe-client dial-pool-number 1
 !
 interface GigabitEthernet0/1
  description connection to S1
@@ -112,6 +123,7 @@ interface Serial0/0/0
  ipv6 address 2001:ACAD:CAFE:12::1/64
  ipv6 enable
  ipv6 eigrp 99
+ ipv6 traffic-filter IPV6_PING_BLOCK in
  ppp authentication chap callin
  clock rate 2000000
 !
@@ -119,6 +131,13 @@ interface Serial0/0/1
  no ip address
  shutdown
  clock rate 2000000
+!
+interface Dialer1
+ mtu 1492
+ ip address negotiated
+ encapsulation ppp
+ dialer pool 1
+ ppp authentication chap
 !
 !
 router bgp 65100
@@ -132,6 +151,7 @@ no ip http server
 no ip http secure-server
 ip flow-export version 9
 !
+ip route 0.0.0.0 0.0.0.0 Dialer1
 ip route 0.0.0.0 0.0.0.0 Serial0/0/0 205
 ip route 192.168.13.0 255.255.255.0 Tunnel0
 !
@@ -141,6 +161,10 @@ ipv6 router eigrp 99
 ipv6 ioam timestamp
 !
 !
+!
+ipv6 access-list IPV6_PING_BLOCK
+ deny icmp any 2001:ACAD:CAFE:1::/64 echo-request
+ permit ipv6 any any
 !
 control-plane
 !
@@ -171,12 +195,11 @@ end
 
 
 
-
 R2
 
-Current configuration : 2238 bytes
+Current configuration : 2554 bytes
 !
-! Last configuration change at 07:51:32 UTC Tue Aug 28 2001
+! Last configuration change at 10:11:25 UTC Tue Aug 28 2001
 !
 version 15.7
 service timestamps debug datetime msec
@@ -236,6 +259,7 @@ username admin password 7 08325F4619181604
 username r2 password 7 121A0C0411041C143A
 username R1 password 7 070C285F4D06091507
 username R3 password 7 060506324F41190915
+username R1PPP password 7 01100F175804161F31
 !
 redundancy
 !
@@ -252,6 +276,9 @@ redundancy
 !
 !
 !
+bba-group pppoe global
+ virtual-template 1
+!
 !
 interface Embedded-Service-Engine0/0
  no ip address
@@ -261,6 +288,7 @@ interface GigabitEthernet0/0
  no ip address
  duplex auto
  speed auto
+ pppoe enable group global
 !
 interface GigabitEthernet0/1
  no ip address
@@ -290,7 +318,14 @@ interface Serial0/0/1
  ppp pap sent-username R2 password 7 0822455D0A16150702
  clock rate 2000000
 !
+interface Virtual-Template1
+ mtu 1492
+ ip address 192.168.1.254 255.255.255.0
+ peer default ip address pool PPP_POOL
+ ppp authentication chap callin
 !
+!
+ip local pool PPP_POOL 192.168.1.1 192.168.1.10
 ip forward-protocol nd
 !
 no ip http server
@@ -335,15 +370,12 @@ end
 
 
 
-
-
-
 R3
 
 
-Current configuration : 3083 bytes
+Current configuration : 3461 bytes
 !
-! Last configuration change at 11:19:32 UTC Wed Feb 5 2020
+! Last configuration change at 15:16:35 UTC Wed Feb 5 2020
 !
 version 15.7
 no service timestamps debug uptime
@@ -457,6 +489,7 @@ interface GigabitEthernet0/1
 interface Serial0/0/0
  no ip address
  shutdown
+ ipv6 traffic-filter IPV6_PING_BLOCK in
  clock rate 2000000
 !
 interface Serial0/0/1
@@ -503,13 +536,26 @@ ip nat source list 1 interface Serial0/0/1 overload
 ip route 0.0.0.0 0.0.0.0 Serial0/0/1
 ip route 192.168.13.0 255.255.255.0 Tunnel0
 !
+ip access-list standard SNMP_PERMIT
+ permit 172.16.3.0 0.0.0.255
+!
+ip access-list extended PING_BLOCK
+ deny   icmp any 172.16.3.0 0.0.0.255 echo
+ permit ip any any
+!
+ip sla 1
+ icmp-echo 200.150.100.1
+ frequency 20
 ipv6 router eigrp 99
  eigrp router-id 3.3.3.3
 !
 ipv6 ioam timestamp
 !
 !
-access-list 1 permit 0.0.0.0 255.255.255.0
+snmp-server group ADMIN v3 priv read MY_SNMP access SNMP_PERMIT
+snmp-server view MY_SNMP iso included
+snmp-server community public RO
+snmp-server community private RW
 !
 control-plane
 !
@@ -537,4 +583,5 @@ line vty 5 15
 scheduler allocate 20000 1000
 !
 end
+
 
