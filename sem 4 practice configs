@@ -1,8 +1,8 @@
 R1
 
-Current configuration : 2272 bytes
+Current configuration : 2500 bytes
 !
-! Last configuration change at 10:57:44 UTC Wed Feb 5 2020
+! Last configuration change at 11:43:12 UTC Wed Feb 5 2020
 !
 version 15.7
 service timestamps debug datetime msec
@@ -22,6 +22,25 @@ memory-size iomem 15
 !
 !
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
 no ip domain lookup
 ip domain name CISCO-LAB.com
 no ip cef
@@ -29,6 +48,10 @@ ipv6 unicast-routing
 no ipv6 cef
 !
 multilink bundle-name authenticated
+!
+!
+!
+!
 !
 license udi pid CISCO2901/K9 sn FJC2028A2UA
 license boot module c2900 technology-package securityk9
@@ -43,8 +66,23 @@ username R3 password 7 094F471A1A0A07021B
 redundancy
 !
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface Tunnel0
  ip address 192.168.13.1 255.255.255.252
+ tunnel source 198.198.12.1
+ tunnel destination 198.198.23.2
 !
 interface Embedded-Service-Engine0/0
  no ip address
@@ -83,6 +121,11 @@ interface Serial0/0/1
  clock rate 2000000
 !
 !
+router bgp 65100
+ bgp log-neighbor-changes
+ network 172.16.1.0 mask 255.255.255.0
+ neighbor 192.168.13.2 remote-as 65200
+!
 ip forward-protocol nd
 !
 no ip http server
@@ -90,6 +133,7 @@ no ip http secure-server
 ip flow-export version 9
 !
 ip route 0.0.0.0 0.0.0.0 Serial0/0/0 205
+ip route 192.168.13.0 255.255.255.0 Tunnel0
 !
 ipv6 router eigrp 99
  eigrp router-id 1.1.1.1
@@ -128,7 +172,6 @@ end
 
 
 
-
 R2
 
 Current configuration : 2238 bytes
@@ -153,6 +196,25 @@ memory-size iomem 15
 !
 !
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
 no ip domain lookup
 ip domain name CISCO-LAB.com
 no ip cef
@@ -160,6 +222,10 @@ ipv6 unicast-routing
 no ipv6 cef
 !
 multilink bundle-name authenticated
+!
+!
+!
+!
 !
 license udi pid CISCO2901/K9 sn FJC2028A2TH
 license boot module c2900 technology-package securityk9
@@ -172,6 +238,18 @@ username R1 password 7 070C285F4D06091507
 username R3 password 7 060506324F41190915
 !
 redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 !
 !
 !
@@ -259,12 +337,13 @@ end
 
 
 
+
 R3
 
 
-Current configuration : 2811 bytes
+Current configuration : 3083 bytes
 !
-! Last configuration change at 10:20:08 UTC Wed Feb 5 2020
+! Last configuration change at 11:19:32 UTC Wed Feb 5 2020
 !
 version 15.7
 no service timestamps debug uptime
@@ -276,10 +355,32 @@ hostname R3
 boot-start-marker
 boot-end-marker
 !
+!
 enable secret 5 $1$mERr$EJnmB234UvJf9yoQMWYJK/
 !
 no aaa new-model
 memory-size iomem 15
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
 !
 no ip domain lookup
 ip domain name CISCO-LAB.com
@@ -288,6 +389,10 @@ ipv6 unicast-routing
 no ipv6 cef
 !
 multilink bundle-name authenticated
+!
+!
+!
+!
 !
 license udi pid CISCO2901/K9 sn FJC2028A2TW
 license boot module c2900 technology-package securityk9
@@ -302,6 +407,19 @@ username R2 password 7 070C285F4D06091507
 redundancy
 !
 !
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface Loopback1
  description My loopback
  ip address 200.150.100.1 255.255.255.255
@@ -311,6 +429,8 @@ interface Loopback1
 !
 interface Tunnel0
  ip address 192.168.13.2 255.255.255.252
+ tunnel source 198.198.23.2
+ tunnel destination 198.198.12.1
 !
 interface Embedded-Service-Engine0/0
  no ip address
@@ -362,7 +482,15 @@ interface Serial0/1/1
  shutdown
  clock rate 2000000
 !
+!
+!
 router eigrp 99
+!
+router bgp 65200
+ bgp log-neighbor-changes
+ network 172.16.3.0 mask 255.255.255.0
+ network 200.150.100.1 mask 255.255.255.255
+ neighbor 192.168.13.1 remote-as 65100
 !
 ip forward-protocol nd
 !
@@ -373,17 +501,20 @@ ip flow-export version 9
 !
 ip nat source list 1 interface Serial0/0/1 overload
 ip route 0.0.0.0 0.0.0.0 Serial0/0/1
+ip route 192.168.13.0 255.255.255.0 Tunnel0
 !
 ipv6 router eigrp 99
  eigrp router-id 3.3.3.3
 !
 ipv6 ioam timestamp
 !
+!
 access-list 1 permit 0.0.0.0 255.255.255.0
 !
 control-plane
 !
-vstack
+!
+ vstack
 banner motd ^CCunauthorized access is prohibited^C
 !
 line con 0
@@ -406,22 +537,4 @@ line vty 5 15
 scheduler allocate 20000 1000
 !
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
