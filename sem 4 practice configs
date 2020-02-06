@@ -17,11 +17,14 @@ int d1
  dialer pool 1
  ppp authentication chap
 
+ip route 0.0.0.0 0.0.0.0 dialer1
+
 GRE Tunnel:
 interface t0
  ip address <private ip> <subnet mask>
  tunnel source <physical int IP>
  tunnel destination <remote int IP>
+
 
 *do this again on the other router too*
 
@@ -46,7 +49,11 @@ interface <int>
  ipv6 address 2001:ACAD:CAFE:12::1/64
 
 
-
+SNMP:
+snmp-server group <grp_name> v3 priv read <some name> access <acl_allowed>
+snmp-server view <some name> iso included
+snmp-server community <community string> RO
+snmp-server user ???
 
 SW
 
