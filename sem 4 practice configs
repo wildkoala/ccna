@@ -1,3 +1,53 @@
+PPP configuration:
+encapsulation ppp
+ppp authentication chap
+exit
+username <hostname> password cisco
+
+PPPoE:
+interface <int>
+pppoe enable
+pppoe-client dial-pool-number 1
+exit
+
+int d1
+ mtu 1492
+ ip address negotiated
+ encapsulation ppp
+ dialer pool 1
+ ppp authentication chap
+
+GRE Tunnel:
+interface t0
+ ip address <private ip> <subnet mask>
+ tunnel source <physical int IP>
+ tunnel destination <remote int IP>
+
+*do this again on the other router too*
+
+BGP:
+
+router bgp <AS #>
+ network <net addr> mask <mask>
+ neighbor <ip> remote-as <remote AS #>
+
+Your neighbor IP can be configured over a tunnel,
+So it CAN be a private IP.
+
+IPv6 EIGRP:
+
+ipv6 router eigrp 99
+ eigrp router-id 1.1.1.1
+
+interface <int>
+ ipv6 enable
+ ipv6 eigrp 99
+ ipv6 address FE80::1 link-local
+ ipv6 address 2001:ACAD:CAFE:12::1/64
+
+
+
+
 SW
 
 Configuring SPAN on a switch
@@ -8,47 +58,6 @@ monitor session <#> destination interface <int> //where you want it sent after. 
 
 R1
 
-Current configuration : 2873 bytes
-!
-! Last configuration change at 15:44:40 UTC Wed Feb 5 2020
-!
-version 15.7
-service timestamps debug datetime msec
-service timestamps log datetime msec
-service password-encryption
-!
-hostname R1
-!
-boot-start-marker
-boot-end-marker
-!
-!
-enable secret 5 $1$mERr$EJnmB234UvJf9yoQMWYJK/
-!
-no aaa new-model
-memory-size iomem 15
-!
-!
-!
- --More--
-*Feb  5 15:44:40.726: %SYS-5-CONFIG_I: Configured from console !        e
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-
-
-!
-!
-!
 !
 no ip domain lookup
 ip domain name CISCO-LAB.com
@@ -73,30 +82,11 @@ username R2 password 7 104D000A0618021B1C
 username R3 password 7 094F471A1A0A07021B
 username R1PPP password 7 070C285F4D06091507
 !
-redundancy
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
-!
 !
 interface Tunnel0
  ip address 192.168.13.1 255.255.255.252
  tunnel source 198.198.12.1
  tunnel destination 198.198.23.2
-!
-interface Embedded-Service-Engine0/0
- no ip address
- shutdown
 !
 interface GigabitEthernet0/0
  no ip address
